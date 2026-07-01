@@ -1,0 +1,69 @@
+name: Build Android APK
+
+# Bygger en installerbar Android-APK direkte i GitHub Actions og laster den
+# opp som Release-fil. Ingen Expo-konto eller signeringsnøkler kreves:
+# runneren har Android SDK, og `expo prebuild` + Gradle bygger alt selv.
+# APK-en signeres med Androids standard debug-nøkkel (fint for sideloading).
+
+on:
+  # Manuell kjøring fra Actions-fanen (lager artifact, ingen Release)
+  workflow_dispatch:
+  # Push av en tag som vX.Y.Z lager en Release med APK-en
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write # nødvendig for å opprette Release og laste opp filen
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup Java (JDK 17)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install dependencies
+        # --ignore-optional hopper over @expo/ngrok-binærene (kun for `--tunnel`,
+        # trengs ikke for bygging) som ellers kan gi flaky installasjon.
+        run: yarn install --ignore-optional
+
+      - name: Expo prebuild (Android)
+        run: npx expo prebuild --platform android --no-install
+
+      - name: Build release APK
+        run: cd android && ./gradlew assembleRelease --no-daemon
+
+      - name: Rename APK
+        run: cp android/app/build/outputs/apk/release/app-release.apk gotland-511.apk
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: gotland-511-apk
+          path: frontend/gotland-511.apk
+          if-no-files-found: error
+
+      - name: Publish Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: frontend/gotland-511.apk
+          generate_release_notes: true

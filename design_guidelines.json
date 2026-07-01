@@ -1,0 +1,139 @@
+{
+  "app_name": "Gotland 511 Pace Calculator & Tracker",
+  "personality": "7 Dark-First Utility",
+  "personality_one_liner": "A rugged, tactical, and highly legible command center built for ultra-endurance tracking and live pace adjustments.",
+  "color": {
+    "surface": "#121212",
+    "onSurface": "#F3F3F3",
+    "surfaceSecondary": "#1E1E1E",
+    "onSurfaceSecondary": "#A3A3A3",
+    "surfaceTertiary": "#2A2A2A",
+    "onSurfaceTertiary": "#C4C4C4",
+    "surfaceInverse": "#F3F3F3",
+    "onSurfaceInverse": "#121212",
+    "brand": "#E55B3C",
+    "brandPrimary": "#E55B3C",
+    "onBrandPrimary": "#FFFFFF",
+    "brandSecondary": "#3A1E16",
+    "onBrandSecondary": "#E55B3C",
+    "brandTertiary": "#261612",
+    "onBrandTertiary": "#E55B3C",
+    "success": "#34C759",
+    "onSuccess": "#000000",
+    "warning": "#FF9F0A",
+    "onWarning": "#000000",
+    "error": "#FF453A",
+    "onError": "#FFFFFF",
+    "border": "#2A2A2A",
+    "borderStrong": "#3A3A3A",
+    "divider": "#2A2A2A"
+  },
+  "typography": {
+    "displayFontFamily": "Barlow Condensed",
+    "textFontFamily": "DM Sans",
+    "scale": {
+      "sm": 12,
+      "base": 14,
+      "lg": 16,
+      "xl": 20,
+      "2xl": 24
+    }
+  },
+  "spacing": {
+    "rule": "Dense but scannable. Use sm/md spacing for data rows. Reserve lg spacing for section divisions. No decorative empty space.",
+    "xs": 4,
+    "sm": 8,
+    "md": 12,
+    "lg": 16,
+    "xl": 24,
+    "2xl": 32,
+    "3xl": 48
+  },
+  "radius_tokens": {
+    "sm": 4,
+    "md": 8,
+    "lg": 12,
+    "pill": 999
+  },
+  "shadow_tier": 0,
+  "navigation": "bottom_tabs",
+  "icon_set": "Phosphor",
+  "glassmorphism": {
+    "enabled": false,
+    "do's": [
+      "Use solid surfaceSecondary and borders to separate sections instead of blur, maintaining high contrast for outdoor visibility."
+    ],
+    "dont's": [
+      "Do not use glass/blur on this app. It reduces legibility in harsh outdoor lighting."
+    ]
+  },
+  "platform_libraries": {
+    "glass": {
+      "ios": "expo-blur",
+      "android": "expo-blur",
+      "low_end_android_fallback": "solid surfaceSecondary"
+    },
+    "image": "expo-image",
+    "blur": "expo-blur",
+    "bottom_sheet": "@gorhom/bottom-sheet",
+    "animation": "react-native-reanimated",
+    "gesture": "react-native-gesture-handler",
+    "map": "react-native-maps"
+  },
+  "screens": [
+    {
+      "name": "Schedule",
+      "purpose": "Interactive arrival-time calculator and POI list.",
+      "states": {
+        "loading": "Skeleton rows reflecting the exact dimensions of the POI cards.",
+        "empty": "No POIs match the selected filter. Show a reset filter button.",
+        "error": "Failed to load spreadsheet data. Retry button prominent."
+      },
+      "layout": "1. Sticky Header (solid surfaceSecondary, bottom border): Top row has Start Time picker (left) and Pace input mm:ss (right). Use Barlow Condensed for the numeric values to make them feel like a digital watch interface.\n2. Chip Row: Horizontally scrolling row of filter chips directly below the inputs (All, Food, Water, Church, etc.). Active state uses brandSecondary bg with brandPrimary text.\n3. List: Flat list of POI cards. Each card uses a 3-column grid layout for fast scanning. Left: Distance (e.g. '42.5 km' in Barlow). Center: POI Name, Category icon, Off-route badge (if true, small error-tinted pill). Right: Arrival Time (e.g. '14:30' in Barlow Condensed). Dividers between rows, no card shadows."
+    },
+    {
+      "name": "Map",
+      "purpose": "Live GPS tracking overlaid on the Gotland route with next-POI awareness.",
+      "states": {
+        "loading": "Map loading state with center spinner.",
+        "empty": "N/A",
+        "error": "GPS signal lost or location permissions denied banner."
+      },
+      "layout": "1. Full-screen react-native-maps view with a dark/night map style JSON.\n2. Overlay Floating Panel: Pinned to the bottom (above the tab bar). A solid surfaceSecondary rounded-md rectangle. Displays a split view: Left shows Current Speed (large Barlow metric). Right shows 'Next: [POI Name]' and 'Distance to go'.\n3. FAB: 'Recenter' icon button floating above the panel on the right side."
+    },
+    {
+      "name": "About",
+      "purpose": "Contextual information regarding the Gotland 511 route.",
+      "states": {
+        "loading": "Standard spinner.",
+        "empty": "N/A",
+        "error": "N/A"
+      },
+      "layout": "1. Hero Image: Full width, height ~250pt, featuring the Gotland landscape image. Requires a gradient-to-dark scrim (top-down transparent to surface) so the back button and header text are legible.\n2. Content: Edge-to-edge typography layout with lg padding. Title 'Gotland 511' in Barlow Condensed xl. Standard DM Sans for body copy explaining the event and how the pace calculation works."
+    }
+  ],
+  "images": {
+    "about_hero": {
+      "url": "https://images.pexels.com/photos/23913606/pexels-photo-23913606.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "dark": "https://images.pexels.com/photos/23913606/pexels-photo-23913606.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "alt": "Church tower and lush fields on Gotland Island, Sweden."
+    }
+  },
+  "haptics": {
+    "events": {
+      "tab_press": "light",
+      "chip_select": "light",
+      "time_picker_confirm": "medium",
+      "pace_input_commit": "medium",
+      "map_recenter": "light"
+    }
+  },
+  "instructions_to_main_agent": [
+    "Strictly adhere to the 7 Dark-First Utility personality. Do not use glassmorphism or blur effects; rely on solid surfaceSecondary and borders for layering to maximize outdoor visibility.",
+    "Implement the POI card list as a dense, scannable data table. Use the condensed display font (Barlow Condensed) for all numbers (Time, Distance, Pace) to reinforce the athletic, Wahoo/Garmin-style command center feel.",
+    "Ensure the sticky header on the Schedule screen is anchored securely, with the list scrolling behind it, and that the filter chips remain accessible at all times.",
+    "For the Map screen, ensure the map style is forced into a dark/night theme to match the overall UI. The bottom floating panel must sit above the safe area / tab bar and remain easily legible with high contrast.",
+    "Use Phosphor icons consistently. Ensure all touch targets (especially the filter chips and map FAB) are at least 44x44pt.",
+    "The about hero image must have the mandatory top-down gradient scrim (transparent to surface) applied to ensure the back button and any overlaid text remain readable against the photo."
+  ]
+}
